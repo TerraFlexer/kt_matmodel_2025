@@ -16,11 +16,11 @@ N = 100
 Edge = np.pi
 
 
-x = np.linspace(-Edge, Edge, N, endpoint=False)
-y = np.linspace(-Edge, Edge, N, endpoint=False)
+x = np.linspace(-Edge, Edge, N)
+y = np.linspace(-Edge, Edge, N)
 Y, X = np.meshgrid(x, y)
 
-Z = np.sin(np.sqrt(X**2 + Y**2))
+Z = np.sin(X ** 2 + (Y - 1) ** 2 / 2)
 
 u1 = add_gauss_noise(Z, 0.05, N)
 
@@ -30,7 +30,7 @@ arr = np.array([[Z, u1, abs(Z - u1)], [Z, u2, abs(Z - u2)]])
 
 arr_names = np.array([['Z', 'u1', '|Z - u1|'], ['Z', 'u2', '|Z - u2|']])
 
-fig, axs = plt.subplots(2, 3, figsize=(20, 10))
+fig, axs = plt.subplots(2, 3, figsize=(15, 10))
 for col in range(3):
     for row in range(2):
         ax = axs[row, col]
@@ -40,15 +40,15 @@ for col in range(3):
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_aspect('equal')
-        labels = ['-$\pi$', '-Pi / 2', '0', 'Pi / 2']
+        labels = ['$-\pi$', '$-\\frac{\pi}{2}$', '0', '$\\frac{\pi}{2}$', '$\pi$']
 
-        ax.set_xticks([-np.pi, -np.pi / 2, 0, np.pi / 2])
+        ax.set_xticks([-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi])
         ax.set_xticklabels(labels)
-        ax.set_yticks([-np.pi, -np.pi / 2, 0, np.pi / 2])
+        ax.set_yticks([-np.pi, -np.pi / 2, 0, np.pi / 2, np.pi])
         ax.set_yticklabels(labels)
         if (col == 2):
-            fig.colorbar(pcm, ax=axs[row, col], shrink=0.6)
+            fig.colorbar(pcm, ax=axs[row, col], shrink=0.8)
     if col == 1:
-        fig.colorbar(pcm, ax=axs[:, col], shrink=0.6)
+        fig.colorbar(pcm, ax=axs[:, :col + 1], shrink=0.9)
 
 plt.show()
