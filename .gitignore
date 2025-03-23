@@ -3,3 +3,4 @@ venv/
 *.gif
 *.h5
 *.txt
+*.npz
