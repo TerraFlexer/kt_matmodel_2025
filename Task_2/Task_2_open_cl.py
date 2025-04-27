@@ -14,7 +14,6 @@ def velocity_verlet_opencl(masses, positions, velocities, dt, steps):
     vel = velocities.astype(np.float32).copy()
     masses = masses.astype(np.float32).copy()
 
-    # Инициализация OpenCL
     ctx = cl.create_some_context()
     queue = cl.CommandQueue(ctx)
 
@@ -25,7 +24,6 @@ def velocity_verlet_opencl(masses, positions, velocities, dt, steps):
 
     acc_buf = cl.Buffer(ctx, mf.READ_WRITE, pos.nbytes)
 
-    # OpenCL kernel
     kernel_code = """
     #define G 6.67430e-11f
 
@@ -68,15 +66,11 @@ def velocity_verlet_opencl(masses, positions, velocities, dt, steps):
     vel = vel.view(np.float32).reshape(-1, 2)
 
     for t in range(1, steps):
-        # Вычислить ускорение acc
         prg.compute_acc(queue, (N,), None, np.int32(N), masses_buf, pos_buf, acc_buf)
-        # Скопировать ускорение
         acc = np.empty_like(pos)
         cl.enqueue_copy(queue, acc, acc_buf)
 
-        # Обновить позиции
         prg.update_pos_vel(queue, (N,), None, np.int32(N), np.float32(dt), pos_buf, vel_buf, acc_buf, acc_buf)
-        # Сохранить траекторию
         cl.enqueue_copy(queue, pos, pos_buf)
         traj[:, :, t] = pos
 

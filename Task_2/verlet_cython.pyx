@@ -3,14 +3,13 @@ import numpy as np
 cimport numpy as np
 cimport cython
 
-cdef double G = 6.67430e-11  # гравитационная постоянная
+cdef double G = 6.67430e-11
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def velocity_verlet_cython(object masses_obj, object positions_obj, object velocities_obj, double dt, int steps):
     cdef int N = positions_obj.shape[0]
-    
-    # Теперь masses — одномерный memoryview
+
     cdef double[::1] masses = masses_obj
     cdef double[:, ::1] pos = positions_obj.copy()
     cdef double[:, ::1] vel = velocities_obj.copy()
