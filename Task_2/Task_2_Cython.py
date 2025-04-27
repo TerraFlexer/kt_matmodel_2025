@@ -1,5 +1,5 @@
 import numpy as np
-from verlet_cython import velocity_verlet_cython
+from verlet_cython import velocity_verlet_cython # type: ignore
 import matplotlib.pyplot as plt
 
 # Пример данных
